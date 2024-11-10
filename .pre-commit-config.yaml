@@ -4,6 +4,6 @@ repos:
       - id: generate-requirements
         name: Generate requirements.txt
         entry: poetry
-        args: [export, --format, requirements.txt, --output, requirements.txt, --without-hashes]
+        args: [export, --format, requirements.txt, --output, requirements.txt]
         language: system
         pass_filenames: false
