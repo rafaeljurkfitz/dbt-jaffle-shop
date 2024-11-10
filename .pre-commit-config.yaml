@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: generate-requirements
         name: Generate requirements.txt
-        entry: poetry export -f requirements.txt --output requirements.txt --without-hashes
+        entry: poetry
+        args: [export, --format, requirements.txt, --output, requirements.txt, --without-hashes]
         language: system
-        types: [python]
-        files: ^pyproject\.toml$
+        pass_filenames: false
