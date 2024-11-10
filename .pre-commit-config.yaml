@@ -3,7 +3,8 @@ repos:
     hooks:
       - id: generate-requirements
         name: Generate requirements.txt
-        entry: poetry
-        args: [export, --format, requirements.txt, --output, requirements.txt]
+        entry: > 
+          sh -c "poetry export --without-hashes --without-urls | awk -F';' '{print $1}' > requirements.txt"
+        # args: [export, --format, requirements.txt, --output, requirements.txt, --without-hashes]
         language: system
         pass_filenames: false
