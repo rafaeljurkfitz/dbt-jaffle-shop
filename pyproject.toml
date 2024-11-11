@@ -8,11 +8,17 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "3.12.0"
 dbt-postgres = "^1.8.2"
+sqlfluff-templater-dbt = "^3.2.5"
 
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
+taskipy = "^1.14.0"
+sqlfluff = "^3.2.5"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.taskipy.tasks]
+fix = "sqlfluff fix snapshots && sqlfluff fix models"
