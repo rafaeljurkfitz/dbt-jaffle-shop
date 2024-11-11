@@ -3,8 +3,21 @@ repos:
     hooks:
       - id: generate-requirements
         name: Generate requirements.txt
-        entry: > 
+        entry: >
           sh -c "poetry export --without-hashes --without-urls | awk -F';' '{print $1}' > requirements.txt"
         # args: [export, --format, requirements.txt, --output, requirements.txt, --without-hashes]
         language: system
         pass_filenames: false
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: requirements-txt-fixer
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.3.4
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
