@@ -1,0 +1,160 @@
+models:
+  - name: int_sales__aggregated_with_booleans
+    description: >
+      Combina dados de pedidos com um resumo dos itens de cada pedido. Inclui detalhes como o custo total do pedido, subtotal dos itens,
+      contagem de itens alimentares e bebidas, e se o pedido contém algum alimento ou bebida.
+    columns:
+      - name: order_id
+        description: "A chave única para cada pedido."
+        tests:
+          - not_null
+          - unique
+      - name: order_cost
+        description: "Custo total do pedido, incluindo impostos e outros encargos."
+      - name: order_items_subtotal
+        description: "Subtotal dos itens no pedido, excluindo impostos e outros encargos."
+      - name: count_food_items
+        description: "Número de itens alimentares no pedido."
+      - name: count_drink_items
+        description: "Número de itens de bebidas no pedido."
+      - name: count_order_items
+        description: "Número total de itens no pedido."
+      - name: is_food_order
+        description: "Indica se o pedido contém pelo menos um item alimentar."
+        tests:
+          - accepted_values:
+              values: [true, false]
+      - name: is_drink_order
+        description: "Indica se o pedido contém pelo menos um item de bebida."
+        tests:
+          - accepted_values:
+              values: [true, false]
+
+  - name: int_sales__customers_with_summary
+    description: >
+      Este modelo combina dados dos clientes com um resumo dos pedidos de cada cliente. Inclui o número total de pedidos,
+      datas do primeiro e último pedido, gasto total e imposto pago, além de classificar o cliente como "novo" ou "retorno".
+    columns:
+      - name: customer_id
+        description: "A chave única para cada cliente."
+        tests:
+          - not_null
+          - unique
+      - name: count_lifetime_orders
+        description: "Total de pedidos feitos pelo cliente ao longo do tempo."
+      - name: first_ordered_at
+        description: "Data e hora do primeiro pedido do cliente."
+      - name: last_ordered_at
+        description: "Data e hora do pedido mais recente do cliente."
+      - name: lifetime_spend_pretax
+        description: "Valor total gasto pelo cliente antes de impostos."
+      - name: lifetime_tax_paid
+        description: "Valor total pago em impostos pelo cliente ao longo do tempo."
+      - name: lifetime_spend
+        description: "Gasto total do cliente, incluindo impostos."
+      - name: customer_type
+        description: "Tipo de cliente: 'novo' para clientes que fizeram apenas um pedido, 'retorno' para clientes recorrentes."
+        tests:
+          - accepted_values:
+              values: ['new', 'returning']
+
+  - name: int_sales__items_summary
+    description: >
+      Este modelo fornece um resumo dos itens de pedidos, calculando o custo total, subtotal dos itens, e a contagem de itens
+      alimentícios e de bebidas para cada pedido.
+    columns:
+      - name: order_id
+        description: "A chave única para cada pedido."
+        tests:
+          - not_null
+          - unique
+      - name: order_cost
+        description: "Custo total dos itens do pedido, incluindo custo de fornecimento."
+      - name: order_items_subtotal
+        description: "Subtotal do preço dos produtos do pedido, sem custos adicionais."
+      - name: count_order_items
+        description: "Número total de itens no pedido."
+      - name: count_food_items
+        description: "Contagem de itens de comida no pedido."
+      - name: count_drink_items
+        description: "Contagem de itens de bebida no pedido."
+
+  - name: int_sales__joined_with_products
+    description: >
+      Este modelo combina dados dos itens dos pedidos com informações adicionais sobre os pedidos, produtos,
+      e resumo de suprimentos, fornecendo uma visão completa de cada item de pedido com detalhes do produto
+      e custos associados.
+    columns:
+      - name: order_item_id
+        description: "A chave única para cada item de pedido."
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: "A chave única para cada pedido associado ao item."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_jaffle_shop__orders')
+              field: order_id
+      - name: product_id
+        description: "A chave única para o produto associado ao item de pedido."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_jaffle_shop__products')
+              field: product_id
+      - name: ordered_at
+        description: "Data e hora em que o pedido foi realizado."
+      - name: product_name
+        description: "Nome do produto associado ao item do pedido."
+      - name: product_price
+        description: "Preço do produto no item do pedido."
+      - name: is_food_item
+        description: "Indica se o item do pedido é de comida."
+      - name: is_drink_item
+        description: "Indica se o item do pedido é uma bebida."
+      - name: supply_cost
+        description: "Custo de fornecimento associado ao produto do item de pedido."
+
+  - name: int_sales__orders_summary
+    description: >
+      Este modelo resume os pedidos de cada cliente, incluindo contagem total de pedidos, datas de primeiro e
+      último pedido, status de cliente recorrente, e gastos totais acumulados.
+    columns:
+      - name: customer_id
+        description: "A chave única para cada cliente."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_jaffle_shop__customers')
+              field: customer_id
+      - name: count_lifetime_orders
+        description: "Número total de pedidos feitos pelo cliente ao longo da vida."
+      - name: is_repeat_buyer
+        description: "Indica se o cliente é recorrente (1) ou não (0)."
+      - name: first_ordered_at
+        description: "Data do primeiro pedido realizado pelo cliente."
+      - name: last_ordered_at
+        description: "Data do pedido mais recente realizado pelo cliente."
+      - name: lifetime_spend_pretax
+        description: "Total acumulado gasto pelo cliente sem impostos."
+      - name: lifetime_tax_paid
+        description: "Total de impostos pagos pelo cliente ao longo dos pedidos."
+      - name: lifetime_spend
+        description: "Total acumulado gasto pelo cliente, incluindo impostos."
+
+  - name: int_sales__supplies_summary
+    description: >
+      Este modelo calcula o custo total de suprimentos para cada produto.
+    columns:
+      - name: product_id
+        description: "A chave única para cada produto associado aos suprimentos."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_jaffle_shop__products')
+              field: product_id
+      - name: supply_cost
+        description: "Custo total dos suprimentos para o produto."
+    materialized: view  # ou 'table', conforme a necessidade

@@ -1,31 +1,31 @@
 models:
   - name: customers
-    description: Customer overview data mart, offering key details for each unique customer. One row per customer.
+    description: Dados gerais de clientes, oferecendo informações essenciais para cada cliente único. Uma linha por cliente.
     data_tests:
       - dbt_utils.expression_is_true:
           expression: "lifetime_spend_pretax + lifetime_tax_paid = lifetime_spend"
     columns:
       - name: customer_id
-        description: The unique key of the orders mart.
+        description: A chave única do mart de pedidos.
         data_tests:
           - not_null
           - unique
       - name: customer_name
-        description: Customers' full name.
+        description: Nome completo dos clientes.
       - name: count_lifetime_orders
-        description: Total number of orders a customer has ever placed.
+        description: Número total de pedidos que um cliente fez até o momento.
       - name: first_ordered_at
-        description: The timestamp when a customer placed their first order.
+        description: Data e hora do primeiro pedido de um cliente.
       - name: last_ordered_at
-        description: The timestamp of a customer's most recent order.
+        description: Data e hora do pedido mais recente de um cliente.
       - name: lifetime_spend_pretax
-        description: The sum of all the pre-tax subtotals of every order a customer has placed.
+        description: Soma de todos os subtotais (antes de impostos) de cada pedido feito por um cliente.
       - name: lifetime_tax_paid
-        description: The sum of all the tax portion of every order a customer has placed.
+        description: Soma de todos os impostos pagos em cada pedido feito por um cliente.
       - name: lifetime_spend
-        description: The sum of all the order totals (including tax) that a customer has ever placed.
+        description: Soma de todos os totais de pedidos (incluindo impostos) que um cliente já fez.
       - name: customer_type
-        description: Options are 'new' or 'returning', indicating if a customer has ordered more than once or has only placed their first order to date.
+        description: Opções são `new` ou `returning`, indicando se um cliente já fez mais de um pedido ou apenas seu primeiro pedido até o momento.
         data_tests:
           - accepted_values:
               values: ["new", "returning"]
@@ -35,7 +35,7 @@ semantic_models:
     defaults:
       agg_time_dimension: first_ordered_at
     description: |
-      Customer grain mart.
+      Mart com dados no nível de cliente.
     model: ref('customers')
     entities:
       - name: customer
@@ -56,34 +56,34 @@ semantic_models:
           time_granularity: day
     measures:
       - name: customers
-        description: Count of unique customers
+        description: Contagem de clientes únicos
         agg: count_distinct
       - name: count_lifetime_orders
-        description: Total count of orders per customer.
+        description: Contagem total de pedidos por cliente.
         agg: sum
       - name: lifetime_spend_pretax
-        description: Customer lifetime spend before taxes.
+        description: Gastos de vida do cliente antes de impostos.
         agg: sum
       - name: lifetime_spend
         agg: sum
-        description: Gross customer lifetime spend inclusive of taxes.
+        description: Gasto total de vida do cliente, incluindo impostos.
 
 metrics:
   - name: lifetime_spend_pretax
-    description: Customer's lifetime spend before tax
-    label: LTV Pre-tax
+    description: Gasto de vida do cliente antes de impostos
+    label: LTV Antes de Impostos
     type: simple
     type_params:
       measure: lifetime_spend_pretax
   - name: count_lifetime_orders
-    description: Count of lifetime orders
-    label: Count Lifetime Orders
+    description: Contagem de pedidos ao longo da vida
+    label: Contagem de Pedidos ao Longo da Vida
     type: simple
     type_params:
       measure: count_lifetime_orders
   - name: average_order_value
-    description: LTV pre-tax / number of orders
-    label: Average Order Value
+    description: LTV antes de impostos / número de pedidos
+    label: Valor Médio do Pedido
     type: derived
     type_params:
       metrics:

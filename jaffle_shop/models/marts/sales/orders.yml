@@ -1,6 +1,6 @@
 models:
   - name: orders
-    description: Order overview data mart, offering key details for each order inlcluding if it's a customer's first order and a food vs. drink item breakdown. One row per order.
+    description: "Resumo dos pedidos, oferecendo detalhes chave para cada pedido, incluindo se é o primeiro pedido do cliente e uma divisão entre itens de comida e bebida. Uma linha por pedido."
     data_tests:
       - dbt_utils.expression_is_true:
           expression: "order_items_subtotal = subtotal"
@@ -8,30 +8,30 @@ models:
           expression: "order_total = subtotal + tax_paid"
     columns:
       - name: order_id
-        description: The unique key of the orders mart.
+        description: "A chave única da tabela de pedidos."
         data_tests:
           - not_null
           - unique
       - name: customer_id
-        description: The foreign key relating to the customer who placed the order.
+        description: "A chave estrangeira relacionada ao cliente que fez o pedido."
         data_tests:
           - relationships:
               to: ref('stg_jaffle_shop__customers')
               field: customer_id
       - name: order_total
-        description: The total amount of the order in USD including tax.
+        description: "O valor total do pedido em USD, incluindo impostos."
       - name: ordered_at
-        description: The timestamp the order was placed at.
+        description: "A data e hora em que o pedido foi realizado."
       - name: order_cost
-        description: The sum of supply expenses to fulfill the order.
+        description: "A soma das despesas de fornecimento para atender o pedido."
       - name: is_food_order
-        description: A boolean indicating if this order included any food items.
+        description: "Um valor booleano indicando se este pedido incluiu itens de comida."
       - name: is_drink_order
-        description: A boolean indicating if this order included any drink items.
+        description: "Um valor booleano indicando se este pedido incluiu itens de bebida."
 
 unit_tests:
   - name: test_order_items_compute_to_bools_correctly
-    description: "Test that the counts of drinks and food orders convert to booleans properly."
+    description: "Testa se a contagem de itens de bebida e comida é convertida corretamente para booleanos."
     model: orders
     given:
       - input: ref('order_items')
@@ -80,7 +80,7 @@ semantic_models:
     defaults:
       agg_time_dimension: ordered_at
     description: |
-      Order fact table. This table is at the order grain with one row per order.
+      Tabela de fatos dos pedidos. Esta tabela está no nível de um pedido, com uma linha por pedido.
     model: ref('orders')
     entities:
       - name: order_id
@@ -108,58 +108,58 @@ semantic_models:
         type: categorical
     measures:
       - name: order_total
-        description: The total amount for each order including taxes.
+        description: "O valor total para cada pedido, incluindo impostos."
         agg: sum
       - name: order_count
         expr: 1
         agg: sum
       - name: tax_paid
-        description: The total tax paid on each order.
+        description: "O total de imposto pago em cada pedido."
         agg: sum
       - name: order_cost
-        description: The cost for each order item. Cost is calculated as a sum of the supply cost for each order item.
+        description: "O custo para cada item do pedido. O custo é calculado como a soma do custo de fornecimento de cada item do pedido."
         agg: sum
 
 metrics:
   - name: order_total
-    description: Sum of total order amonunt. Includes tax + revenue.
+    description: "Soma do valor total dos pedidos. Inclui impostos + receita."
     type: simple
-    label: Order Total
+    label: Total do Pedido
     type_params:
       measure: order_total
   - name: new_customer_orders
-    description: New customer's first order count
-    label: New Customers
+    description: "Contagem do primeiro pedido de novos clientes."
+    label: Novos Clientes
     type: simple
     type_params:
       measure: order_count
     filter: |
       {{ Dimension('order_id__customer_order_number') }} = 1
   - name: large_orders
-    description: "Count of orders with order total over 20."
+    description: "Contagem de pedidos com valor total acima de 20."
     type: simple
-    label: Large Orders
+    label: Grandes Pedidos
     type_params:
       measure: order_count
     filter: |
       {{ Dimension('order_id__order_total_dim') }} >= 20
   - name: orders
-    description: Count of orders.
-    label: Orders
+    description: "Contagem de pedidos."
+    label: Pedidos
     type: simple
     type_params:
       measure: order_count
   - name: food_orders
-    description: Count of orders that contain food order items
-    label: Food Orders
+    description: "Contagem de pedidos que contêm itens de comida."
+    label: Pedidos de Comida
     type: simple
     type_params:
       measure: order_count
     filter: |
       {{ Dimension('order_id__is_food_order') }} = true
   - name: drink_orders
-    description: Count of orders that contain drink order items
-    label: Drink Orders
+    description: "Contagem de pedidos que contêm itens de bebida."
+    label: Pedidos de Bebidas
     type: simple
     type_params:
       measure: order_count

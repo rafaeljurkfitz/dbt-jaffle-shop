@@ -1,32 +1,32 @@
 models:
   - name: stg_jaffle_shop__customers
-    description: Customer data with basic cleaning and transformation applied, one row per customer.
+    description: Dados de clientes com limpeza e transformação básicas aplicadas, uma linha por cliente.
     columns:
       - name: customer_id
-        description: The unique key for each customer.
+        description: A chave única para cada cliente.
         data_tests:
           - not_null
           - unique
 
   - name: stg_jaffle_shop__locations
-    description: List of open locations with basic cleaning and transformation applied, one row per location.
+    description: Lista de locais abertos com limpeza e transformação básicas aplicadas, uma linha por local.
     columns:
       - name: location_id
-        description: The unique key for each location.
+        description: A chave única para cada local.
         data_tests:
           - not_null
           - unique
 
   - name: stg_jaffle_shop__order_items
-    description: Individual food and drink items that make up our orders, one row per item.
+    description: Itens individuais de alimentos e bebidas que compõem nossos pedidos, uma linha por item.
     columns:
       - name: order_item_id
-        description: The unique key for each order item.
+        description: A chave única para cada item de pedido.
         tests:
           - not_null
           - unique
       - name: order_id
-        description: The corresponding order each order item belongs to
+        description: O pedido correspondente ao qual cada item de pedido pertence.
         tests:
           - not_null
           - relationships:
@@ -34,10 +34,10 @@ models:
               field: order_id
 
   - name: stg_jaffle_shop__orders
-    description: Order data with basic cleaning and transformation applied, one row per order.
+    description: Dados de pedidos com limpeza e transformação básicas aplicadas, uma linha por pedido.
     columns:
       - name: order_id
-        description: The unique key for each order.
+        description: A chave única para cada pedido.
         tests:
           - not_null
           - unique
@@ -46,22 +46,22 @@ models:
           expression: "order_total - tax_paid = subtotal"
 
   - name: stg_jaffle_shop__products
-    description: Product (food and drink items that can be ordered) data with basic cleaning and transformation applied, one row per product.
+    description: Dados de produtos (itens de alimentos e bebidas que podem ser pedidos) com limpeza e transformação básicas aplicadas, uma linha por produto.
     columns:
       - name: product_id
-        description: The unique key for each product.
+        description: A chave única para cada produto.
         tests:
           - not_null
           - unique
 
   - name: stg_jaffle_shop__supplies
     description: >
-      List of our supply expenses data with basic cleaning and transformation applied.
+      Lista dos dados de despesas com suprimentos com limpeza e transformação básicas aplicadas.
 
-      One row per supply cost, not per supply. As supply costs fluctuate they receive a new row with a new UUID. Thus there can be multiple rows per supply_id.
+      Uma linha por custo de suprimento, não por suprimento. Como os custos de suprimentos variam, eles recebem uma nova linha com um novo UUID. Assim, pode haver várias linhas por supply_id.
     columns:
       - name: supply_uuid
-        description: The unique key of our supplies per cost.
+        description: A chave única dos nossos suprimentos por custo.
         tests:
           - not_null
           - unique

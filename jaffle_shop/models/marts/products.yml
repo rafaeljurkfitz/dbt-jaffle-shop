@@ -1,16 +1,16 @@
 semantic_models:
-  #The name of the semantic model.
+  # O nome do modelo semântico.
   - name: products
     description: |
-      Product dimension table. The grain of the table is one row per product.
-    #The name of the dbt model and schema
+      Tabela de dimensão de produtos. O nível de granularidade da tabela é uma linha por produto.
+    # O nome do modelo dbt e esquema
     model: ref('products')
-    #Entities. These usually corespond to keys in the table.
+    # Entidades. Estas geralmente correspondem às chaves na tabela.
     entities:
       - name: product
         type: primary
         expr: product_id
-    #Dimensions. Either categorical or time. These add additonal context to metrics. The typical querying pattern is Metric by Dimension.
+    # Dimensões. Podem ser categóricas ou de tempo. Elas adicionam contexto adicional às métricas. O padrão típico de consulta é Métrica por Dimensão.
     dimensions:
       - name: product_name
         type: categorical

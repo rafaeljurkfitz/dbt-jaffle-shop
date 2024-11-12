@@ -4,7 +4,7 @@ sources:
   - name: jaffle_shop
     schema: public_raw
     description: Dados de E-commerce para a Jaffle Shop
-    loader: CSV (Using seeds for study)
+    loader: CSV
     freshness:
       warn_after:
         count: 24

@@ -1,16 +1,16 @@
 semantic_models:
-  #The name of the semantic model.
+  # O nome do modelo semântico.
   - name: supplies
     description: |
-      Supplies dimension table. The grain of the table is one row per supply and product combination.
-    #The name of the dbt model and schema
+      Tabela de dimensão de suprimentos. O nível de granularidade da tabela é uma linha por combinação de suprimento e produto.
+    # O nome do modelo dbt e esquema
     model: ref('supplies')
-    #Entities. These usually corespond to keys in the table.
+    # Entidades. Estas geralmente correspondem às chaves na tabela.
     entities:
       - name: supply
         type: primary
         expr: supply_uuid
-    #Dimensions. Either categorical or time. These add additonal context to metrics. The typical querying pattern is Metric by Dimension.
+    # Dimensões. Podem ser categóricas ou de tempo. Elas adicionam contexto adicional às métricas. O padrão típico de consulta é Métrica por Dimensão.
     dimensions:
       - name: supply_id
         type: categorical

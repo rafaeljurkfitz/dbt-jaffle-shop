@@ -1,7 +1,7 @@
 semantic_models:
   - name: locations
     description: |
-      Location dimension table. The grain of the table is one row per location.
+      Tabela de dimensão de localizações. O nível de granularidade da tabela é uma linha por localização.
     model: ref('locations')
     defaults:
       agg_time_dimension: opened_at
@@ -19,6 +19,6 @@ semantic_models:
           time_granularity: day
     measures:
       - name: average_tax_rate
-        description: Average tax rate.
+        description: "Taxa média de imposto."
         expr: tax_rate
         agg: average
