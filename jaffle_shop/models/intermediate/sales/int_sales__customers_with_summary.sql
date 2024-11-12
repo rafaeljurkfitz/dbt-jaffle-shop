@@ -6,7 +6,7 @@ customers as (
 
 customer_orders_summary as (
     select * from {{ ref('int_sales__orders_summary') }}
-)
+),
 
 summary as (
     select
@@ -17,13 +17,13 @@ summary as (
     customer_orders_summary.lifetime_spend_pretax,
     customer_orders_summary.lifetime_tax_paid,
     customer_orders_summary.lifetime_spend,
-    case
-        when customer_orders_summary.is_repeat_buyer then 'returning'
-        else 'new'
-    end as customer_type
-from customers
-left join customer_orders_summary
-    on customers.customer_id = customer_orders_summary.customer_id
+        case
+            when customer_orders_summary.is_repeat_buyer then 'returning'
+            else 'new'
+        end as customer_type
+    from customers
+    left join customer_orders_summary
+        on customers.customer_id = customer_orders_summary.customer_id
 )
 
 select * from summary
