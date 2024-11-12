@@ -17,6 +17,7 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
 
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
@@ -28,7 +29,7 @@ vars:
 seeds:
   jaffle_shop:
     +schema: raw
-
+    +enabled: false
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models

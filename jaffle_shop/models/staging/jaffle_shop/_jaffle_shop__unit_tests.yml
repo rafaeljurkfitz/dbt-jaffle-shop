@@ -1,7 +1,7 @@
 unit_tests:
   - name: test_does_location_opened_at_trunc_to_date
     description: "Check that opened_at timestamp is properly truncated to a date."
-    model: stg_locations
+    model: stg_jaffle_shop__locations
     given:
       - input: ref('raw_stores')
         rows:
