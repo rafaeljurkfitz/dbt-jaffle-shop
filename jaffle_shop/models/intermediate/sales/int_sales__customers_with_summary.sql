@@ -5,7 +5,7 @@ customers as (
 ),
 
 customer_orders_summary as (
-    select * from {{ ref('int_customer_orders_summary') }}
+    select * from {{ ref('int_sales__orders_summary') }}
 )
 
 select

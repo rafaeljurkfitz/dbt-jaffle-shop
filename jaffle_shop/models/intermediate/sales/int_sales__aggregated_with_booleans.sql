@@ -5,7 +5,7 @@ orders as (
 ),
 
 order_items_summary as (
-    select * from {{ ref('int_order_items_summary') }}
+    select * from {{ ref('int_sales__items_summary') }}
 )
 
 select

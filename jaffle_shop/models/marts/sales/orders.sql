@@ -1,7 +1,7 @@
 with
 
 compute_booleans as (
-    select * from {{ ref('int_orders_aggregated_with_booleans') }}
+    select * from {{ ref('int_sales__aggregated_with_booleans') }}
 )
 
 select
