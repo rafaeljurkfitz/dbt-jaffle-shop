@@ -22,3 +22,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.taskipy.tasks]
 fix = "sqlfluff fix snapshots && sqlfluff fix models"
+docs = "dbt docs generate && dbt docs serve --port 8001"
