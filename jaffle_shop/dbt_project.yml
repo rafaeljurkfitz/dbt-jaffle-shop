@@ -41,5 +41,11 @@ models:
   jaffle_shop:
     staging:
       +materialized: view
+    intermediate:
+      +materialized: ephemeral
     marts:
       +materialized: table
+      # finance:
+      #     +schema: finance
+      #   marketing:
+      #     +schema: marketing
