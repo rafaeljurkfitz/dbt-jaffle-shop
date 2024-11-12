@@ -16,7 +16,8 @@ order_supplies_summary as (
     select * from {{ ref('int_sales__supplies_summary') }}
 )
 
-select
+joined as (
+    select
     order_items.*,
     orders.ordered_at,
     products.product_name,
@@ -30,3 +31,6 @@ left join products on order_items.product_id = products.product_id
 left join
     order_supplies_summary
     on order_items.product_id = order_supplies_summary.product_id
+)
+
+select * from joined

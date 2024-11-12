@@ -4,7 +4,8 @@ order_items as (
     select * from {{ ref('stg_jaffle_shop__order_items') }}
 )
 
-select
+summary as (
+    select
     order_id,
     sum(supply_cost) as order_cost,
     sum(product_price) as order_items_subtotal,
@@ -13,3 +14,6 @@ select
     sum(case when is_drink_item then 1 else 0 end) as count_drink_items
 from order_items
 group by 1
+)
+
+select * from summary

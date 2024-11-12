@@ -4,7 +4,8 @@ orders as (
     select * from {{ ref('orders') }}
 )
 
-select
+summary as (
+    select
     orders.customer_id,
     count(distinct orders.order_id) as count_lifetime_orders,
     count(distinct orders.order_id) > 1 as is_repeat_buyer,
@@ -15,3 +16,6 @@ select
     sum(orders.order_total) as lifetime_spend
 from orders
 group by 1
+)
+
+select * from summary

@@ -8,7 +8,8 @@ customer_orders_summary as (
     select * from {{ ref('int_sales__orders_summary') }}
 )
 
-select
+summary as (
+    select
     customers.*,
     customer_orders_summary.count_lifetime_orders,
     customer_orders_summary.first_ordered_at,
@@ -23,3 +24,6 @@ select
 from customers
 left join customer_orders_summary
     on customers.customer_id = customer_orders_summary.customer_id
+)
+
+select * from summary

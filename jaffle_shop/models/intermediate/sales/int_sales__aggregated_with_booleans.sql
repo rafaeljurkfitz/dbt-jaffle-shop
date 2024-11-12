@@ -8,7 +8,8 @@ order_items_summary as (
     select * from {{ ref('int_sales__items_summary') }}
 )
 
-select
+aggregated as (
+    select
     orders.*,
     order_items_summary.order_cost,
     order_items_summary.order_items_subtotal,
@@ -20,3 +21,6 @@ select
 from orders
 left join order_items_summary
     on orders.order_id = order_items_summary.order_id
+)
+
+select * from aggregated
