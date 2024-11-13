@@ -1,7 +1,10 @@
 models:
   - name: int_sales__aggregated_with_booleans
     description: >
-      Combina dados de pedidos com um resumo dos itens de cada pedido. Inclui detalhes como o custo total do pedido, subtotal dos itens,
+      Fornece um resumo dos itens de pedidos, calculando o custo total, subtotal dos itens, e a contagem de itens
+      alimentícios e de bebidas para cada pedido.
+
+      Depois combina dados de pedidos com um resumo dos itens de cada pedido. Inclui detalhes como o custo total do pedido, subtotal dos itens,
       contagem de itens alimentares e bebidas, e se o pedido contém algum alimento ou bebida.
     columns:
       - name: order_id
@@ -32,7 +35,10 @@ models:
 
   - name: int_sales__customers_with_summary
     description: >
-      Este modelo combina dados dos clientes com um resumo dos pedidos de cada cliente. Inclui o número total de pedidos,
+      Este modelo resume os pedidos de cada cliente, incluindo contagem total de pedidos, datas de primeiro e
+      último pedido, status de cliente recorrente, e gastos totais acumulados.
+
+      Depois combina dados dos clientes com um resumo dos pedidos de cada cliente. Inclui o número total de pedidos,
       datas do primeiro e último pedido, gasto total e imposto pago, além de classificar o cliente como "novo" ou "retorno".
     columns:
       - name: customer_id
@@ -40,6 +46,9 @@ models:
         tests:
           - not_null
           - unique
+          - relationships:
+              to: ref('stg_jaffle_shop__customers')
+              field: customer_id
       - name: count_lifetime_orders
         description: "Total de pedidos feitos pelo cliente ao longo do tempo."
       - name: first_ordered_at
@@ -57,27 +66,6 @@ models:
         tests:
           - accepted_values:
               values: ['new', 'returning']
-
-  - name: int_sales__items_summary
-    description: >
-      Este modelo fornece um resumo dos itens de pedidos, calculando o custo total, subtotal dos itens, e a contagem de itens
-      alimentícios e de bebidas para cada pedido.
-    columns:
-      - name: order_id
-        description: "A chave única para cada pedido."
-        tests:
-          - not_null
-          - unique
-      - name: order_cost
-        description: "Custo total dos itens do pedido, incluindo custo de fornecimento."
-      - name: order_items_subtotal
-        description: "Subtotal do preço dos produtos do pedido, sem custos adicionais."
-      - name: count_order_items
-        description: "Número total de itens no pedido."
-      - name: count_food_items
-        description: "Contagem de itens de comida no pedido."
-      - name: count_drink_items
-        description: "Contagem de itens de bebida no pedido."
 
   - name: int_sales__joined_with_products
     description: >
@@ -117,33 +105,6 @@ models:
       - name: supply_cost
         description: "Custo de fornecimento associado ao produto do item de pedido."
 
-  - name: int_sales__orders_summary
-    description: >
-      Este modelo resume os pedidos de cada cliente, incluindo contagem total de pedidos, datas de primeiro e
-      último pedido, status de cliente recorrente, e gastos totais acumulados.
-    columns:
-      - name: customer_id
-        description: "A chave única para cada cliente."
-        tests:
-          - not_null
-          - relationships:
-              to: ref('stg_jaffle_shop__customers')
-              field: customer_id
-      - name: count_lifetime_orders
-        description: "Número total de pedidos feitos pelo cliente ao longo da vida."
-      - name: is_repeat_buyer
-        description: "Indica se o cliente é recorrente (1) ou não (0)."
-      - name: first_ordered_at
-        description: "Data do primeiro pedido realizado pelo cliente."
-      - name: last_ordered_at
-        description: "Data do pedido mais recente realizado pelo cliente."
-      - name: lifetime_spend_pretax
-        description: "Total acumulado gasto pelo cliente sem impostos."
-      - name: lifetime_tax_paid
-        description: "Total de impostos pagos pelo cliente ao longo dos pedidos."
-      - name: lifetime_spend
-        description: "Total acumulado gasto pelo cliente, incluindo impostos."
-
   - name: int_sales__supplies_summary
     description: >
       Este modelo calcula o custo total de suprimentos para cada produto.
@@ -157,4 +118,3 @@ models:
               field: product_id
       - name: supply_cost
         description: "Custo total dos suprimentos para o produto."
-    materialized: view  # ou 'table', conforme a necessidade
