@@ -2,7 +2,8 @@
 
 `jaffle_shop` é uma loja fictícia de ecommerce. Este projeto dbt transforma dados brutos de um banco de dados de aplicativo em um modelo de __clientes__ e __pedidos__ pronto para análise de dados.
 
-> [!TIP] O que é um jaffle?
+> [!TIP]
+> O que é um jaffle?
 > Jaffles são sanduíches tostados com as bordas crimpadas e seladas. Inventado em Bondi, em 1949, é um clássico australiano. São feitos em uma máquina específica, com sulcos que criam um padrão no pão, e uma prensa que sela as bordas e corta o sanduíche ao meio. Os jaffles podem ser recheados com uma variedade de opções doces ou salgadas, como: Ham, Atum, Feijão cozido, Tomate, Bolognaise, Queijo.
 
 ## 📜 Sumário
@@ -73,13 +74,13 @@
             +enabled: true #<-------troque o false pelo true
    ```
 
-    Isso permitirá carregar o data warehouse com os dados de teste contidos nos arquivos CSV.
+    __Isso permitirá carregar o data warehouse com os dados de teste contidos nos arquivos CSV.__
 
 3. Carregue os dados executando o comando:
 
-```bash
-dbt seed
-```
+    ```bash
+    dbt seed
+    ```
 
 4. Após o carregamento, edite novamente o arquivo dbt_project.yml para reverter a configuração ao formato original, garantindo que os arquivos CSV não apareçam no Grafo de lineage da documentação do projeto.
 
