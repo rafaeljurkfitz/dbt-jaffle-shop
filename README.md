@@ -8,10 +8,16 @@
 
 ## 📜 Sumário
 
-1. [Pré-requisitos](#-pré-requisitos)
-2. [Configuração do Projeto](#-pré-requisitos)
-3. [Carregar os Dados](#-load-the-data)
-4. [Uso do Pre-commit e SQLFluff](#-pre-commit-and-sqlfluff)
+- [🥪 The Jaffle Shop 🦘](#-the-jaffle-shop-)
+  - [📜 Sumário](#-sumário)
+  - [💾 Pré-requisitos](#-pré-requisitos)
+  - [🏁 Checkpoint](#-checkpoint)
+  - [🛠️ Comandos Úteis do DBT](#️-comandos-úteis-do-dbt)
+  - [📊 Carregando os dados](#-carregando-os-dados)
+  - [🚀 Deploy](#-deploy)
+  - [🔍 Pre-commit and SQLFluff](#-pre-commit-and-sqlfluff)
+    - [🔍 Ferramentas de Verificação](#-ferramentas-de-verificação)
+    - [🔍 SQLFluff - Linter e Formatador de SQL](#-sqlfluff---linter-e-formatador-de-sql)
 
 ## 💾 Pré-requisitos
 
@@ -23,7 +29,7 @@
 
 - __Postgres__ - Banco de dados usado como `datawarehouse` no projeto.
 
-### 🏁 Checkpoint
+## 🏁 Checkpoint
 
 1. Clonar o repositorio:
 
@@ -62,9 +68,58 @@
         cd ./jaffle_shop
     ```
 
-### 📊 Load the data
+## 🛠️ Comandos Úteis do DBT
+
+Aqui estão alguns dos comandos mais comuns para usar com o dbt durante o desenvolvimento e a manutenção do projeto:
+
+- __Compilar e executar todos os modelos:__
+
+```bash
+dbt run
+```
+
+- __Compilar e executar apenas os modelos que foram alterados desde a última execução:__
+
+```bash
+    dbt run --models <model_name>
+```
+
+- __Executar todos os testes de dados:__
+
+```bash
+    dbt test
+```
+
+- __Compilar o projeto e atualizar o estado dos modelos:__
+
+```bash
+    dbt build
+```
+
+- __Atualizar a documentação do projeto:__
+
+```bash
+dbt docs generate
+```
+
+- __Iniciar o servidor da documentação para visualização no navegador:__
+
+```bash
+    dbt docs serve
+```
+
+- __Carregar os dados de teste (seeds):__
+
+```bash
+dbt seed
+```
+
+Esses comandos permitem desenvolver, testar e documentar o projeto de forma eficaz.
+
+## 📊 Carregando os dados
 
 1. Abra o arquivo `dbt_project.yml` na pasta `jaffle_shop`.
+
 2. Edite o arquivo `dbt_project.yml`.
 
    ```yml
@@ -84,19 +139,28 @@
 
 4. Após o carregamento, edite novamente o arquivo dbt_project.yml para reverter a configuração ao formato original, garantindo que os arquivos CSV não apareçam no Grafo de lineage da documentação do projeto.
 
-### 👷🏻‍♀️ Project setup
+## 🚀 Deploy
 
-```plaintext
-    jaffle_shop/
-    │
-    ├── models/             # Modelos dbt organizados por camadas (staging, marts)
-    ├── seeds/              # Dados de seeds para o projeto
-    ├── snapshots/          # Snapshots dbt para rastrear mudanças
-    ├── tests/              # Testes de qualidade de dados
-    └── dbt_project.yml     # Arquivo de configuração dbt
+__Configure o Ambiente: Certifique-se de que o ambiente de produção está configurado corretamente e conectado ao seu data warehouse.__
+
+- __Execute o Projeto dbt__: No ambiente de produção, execute o comando abaixo para construir todos os modelos e aplicar as transformações de dados:
+
+```bash
+    dbt build
 ```
 
-### 🔍 Pre-commit and SQLFluff
+- __Gerar e Publicar a Documentação (opcional)__: Gere a documentação do projeto e visualize-a, o que é útil para equipes e stakeholders acompanharem o grafo de lineage e outras informações sobre os modelos:
+
+```bash
+    dbt docs generate
+    dbt docs serve
+```
+
+- Automatize o Deploy (opcional): Para automatizar o processo de deploy, você pode configurar uma pipeline CI/CD que execute o comando dbt build e gere a documentação a cada atualização. Essa prática garante que o ambiente de produção esteja sempre atualizado com as últimas mudanças.
+
+Esses passos garantirão que seu projeto dbt esteja corretamente implantado e atualizado no ambiente de produção, mantendo os dados prontos para análise.
+
+## 🔍 Pre-commit and SQLFluff
 
 Há uma ferramenta opcional chamada `pre-commit` incluída neste projeto, que automaticamente executa processos de formatação e verificação ao fazer um commit.
 
@@ -110,12 +174,15 @@ O [pre-commit](https://pre-commit.com/) executa automaticamente uma série de pr
 
 Pode-se também executar as verificações manualmente com ```pre-commit run --all-files``` para ver o que ele faz sem realizar um commit.
 
-#### Ferramentas de Verificação
+### 🔍 Ferramentas de Verificação
 
-`ruff` - Linter e formatador rápido para Python (para quando houver modelos em Python).
-`check-yaml` - Validação dos arquivos YAML.
-`end-of-file-fixer` - Adiciona uma nova linha ao final de cada arquivo.
-`trailing-whitespace` - Remove espaços em branco ao final das linhas.
+- `ruff` - Linter e formatador rápido para Python (para quando houver modelos em Python).
+
+- `check-yaml` - Validação dos arquivos YAML.
+
+- `end-of-file-fixer` - Adiciona uma nova linha ao final de cada arquivo.
+
+- `trailing-whitespace` - Remove espaços em branco ao final das linhas.
 
 ### 🔍 SQLFluff - Linter e Formatador de SQL
 
