@@ -4,7 +4,7 @@
 
 > [!TIP]
 > __O que é um jaffle?__
-> Jaffles são sanduíches tostados com as bordas crimpadas e seladas. Inventado em Bondi, em 1949, é um clássico australiano. São feitos em uma máquina específica, com sulcos que criam um padrão no pão, e uma prensa que sela as bordas e corta o sanduíche ao meio. Os jaffles podem ser recheados com uma variedade de opções doces ou salgadas, como: Ham, Atum, Feijão cozido, Tomate, Bolognaise, Queijo.
+> Jaffles são sanduíches tostados com as bordas crimpadas e seladas. Inventado em Bondi, em 1949, é um clássico australiano. São feitos em uma máquina específica, com sulcos que criam um padrão no pão, e uma prensa que sela as bordas e corta o sanduíche ao meio. Os jaffles podem ser recheados com uma variedade de opções doces ou salgadas, como: atum, feijão cozido, tomate, bolonhesa, queijo.
 
 ## 📜 Sumário
 
@@ -18,6 +18,7 @@
   - [🔍 Pre-commit and SQLFluff](#-pre-commit-and-sqlfluff)
     - [🔍 Ferramentas de Verificação](#-ferramentas-de-verificação)
     - [🔍 SQLFluff - Linter e Formatador de SQL](#-sqlfluff---linter-e-formatador-de-sql)
+  - [License](#license)
 
 ## 💾 Pré-requisitos
 
@@ -37,36 +38,43 @@
         git clone https://github.com/rafaeljurkfitz/dbt-jaffle-shop.git
     ```
 
-2. Instalar o `Python 3.12.0` no Pyenv:
+2. Construa os contêiner do ```PostgreSQL```, ```PgAdmin``` e ```aplicação Pythom-Slim``` com Docker:
 
     ```bash
-        pyenv install 3.12.0
-        pyenv local use 3.12.0
+        docker-compose up --build -d
     ```
 
-3. Inicie o ambiente virtual com Poetry:
+3. Carregue as seeds do projeto:
 
     ```bash
-        poetry shell
+        docker exec -it dbt-core dbt seed
     ```
 
-4. Instale as dependências do projeto:
+4. Executar e compilar os modelos do projeto:
 
     ```bash
-        poetry install
+        docker exec -it dbt-core dbt run
     ```
 
-5. Construa o contêiner do PostgreSQL com Docker:
+5. Aplicar todos os testes de dados do projeto:
 
     ```bash
-        docker-compose up -d
+        docker exec -it dbt-core dbt test
     ```
 
-6. Navegue para a pasta do projeto dbt:
+6. Atualizar ou criar a documentação do projeto:
 
     ```bash
-        cd ./jaffle_shop
+        docker exec -it dbt-core dbt docs generate
     ```
+
+7. Iniciar o servidor da documentação para visualização no navegador:
+
+    ```bash
+        docker exec -it dbt-core dbt docs serve --host 0.0.0.0 --port 8081
+    ```
+
+8. Acessando agora ```http://localhost:8081/```, teremos acesso a documentação do projeto.
 
 ## 🛠️ Comandos Úteis do DBT
 
@@ -75,7 +83,7 @@ Aqui estão alguns dos comandos mais comuns para usar com o dbt durante o desenv
 - __Compilar e executar todos os modelos:__
 
 ```bash
-dbt run
+    dbt run
 ```
 
 - __Compilar e executar apenas os modelos que foram alterados desde a última execução:__
@@ -99,7 +107,7 @@ dbt run
 - __Atualizar a documentação do projeto:__
 
 ```bash
-dbt docs generate
+    dbt docs generate
 ```
 
 - __Iniciar o servidor da documentação para visualização no navegador:__
@@ -111,7 +119,7 @@ dbt docs generate
 - __Carregar os dados de teste (seeds):__
 
 ```bash
-dbt seed
+    dbt seed
 ```
 
 Esses comandos permitem desenvolver, testar e documentar o projeto de forma eficaz.
@@ -126,7 +134,7 @@ Esses comandos permitem desenvolver, testar e documentar o projeto de forma efic
     seeds:
         jaffle_shop:
             +schema: raw
-            +enabled: true #<-------troque o false pelo true
+            +enabled: true #<-------troque o false pelo true se precisar, isso altera a visualização no lineage.
    ```
 
     __Isso permitirá carregar o data warehouse com os dados de teste contidos nos arquivos CSV.__
@@ -134,7 +142,7 @@ Esses comandos permitem desenvolver, testar e documentar o projeto de forma efic
 3. Carregue os dados executando o comando:
 
     ```bash
-    dbt seed
+        dbt seed
     ```
 
 4. Após o carregamento, edite novamente o arquivo dbt_project.yml para reverter a configuração ao formato original, garantindo que os arquivos CSV não apareçam no Grafo de lineage da documentação do projeto.
@@ -204,3 +212,7 @@ Para rodar o SQLFluff, você pode usar:
 ```
 
 SQLFluff facilita o gerenciamento e a padronização de código SQL em equipes, especialmente útil em projetos com dbt.
+
+## License
+
+This project is licensed under the MIT License.
