@@ -42,6 +42,7 @@ jobs:
     - name: Install dependencies and generate docs
       run: |
         cd jaffle_shop
+        dbt deps
         dbt docs generate
 
     - name: Deploy to GitHub Pages
