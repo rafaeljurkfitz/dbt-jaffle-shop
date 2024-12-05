@@ -13,7 +13,7 @@ profile: 'jaffle_shop'
 # found in the "models/" directory. You probably won't need to change these!
 model-paths: ["models"]
 analysis-paths: ["analyses"]
-test-paths: ["tests"]
+test-paths: ["data_tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
@@ -29,7 +29,7 @@ vars:
 seeds:
   jaffle_shop:
     +schema: raw
-    +enabled: false
+    +enabled: true
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
